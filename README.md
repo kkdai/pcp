@@ -1,7 +1,7 @@
 PCP: Post’s Correspondence Problems implement in Golang
 ==============
 
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/kkdai/cyk/master/LICENSE)  [![GoDoc](https://godoc.org/github.com/kkdai/pcp?status.svg)](https://godoc.org/github.com/kkdai/pcp)  [![Build Status](https://travis-ci.org/kkdai/cyk.svg?branch=master)](https://travis-ci.org/kkdai/pcp)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/kkdai/cyk/master/LICENSE)  [![GoDoc](https://godoc.org/github.com/kkdai/pcp?status.svg)](https://godoc.org/github.com/kkdai/pcp)  [![Build Status](https://travis-ci.org/kkdai/pcp.svg?branch=master)](https://travis-ci.org/kkdai/pcp)
 
 
 What is this PCP Problem
