@@ -129,7 +129,7 @@ func (p *PCP) AddDomino(strA, strB string) int {
 func (p *PCP) recursiveSolve(cur Instance) (Instance, error) {
 	if cur.isCyclicResult() {
 		fmt.Println("Cyclic result")
-		return Instance{}, errors.New(" Cyclic Result .....")
+		return cur, errors.New(" Cyclic Result .....")
 	}
 
 	if cur.isResultReach() {
