@@ -11,6 +11,8 @@ The Post correspondence problem is an undecidable decision problem that was intr
 
 (cited from [wiki](https://en.wikipedia.org/wiki/Post_correspondence_problem))
  
+ 
+**Please note it is not total solution until now.**
 
 Installation and Usage
 =============
@@ -36,6 +38,13 @@ import (
 )
 
 func main() {
+	p := PCP{}
+	p.AddDomino("ab", "b")
+	p.AddDomino("b", "a")
+	p.AddDomino("a", "ab")
+
+	ret, _ := p.FindSolution()
+	fmt.Println("Ret=", ret)
 }
 
 ```
@@ -48,6 +57,7 @@ Inspired By
 - [Theory of computation / Post’s Correspondence Problems (PCP)](http://www.slideshare.net/ThamerAlamery/theory-of-computation-presentation-final)
 - [Github:PCPSolver](https://github.com/dcatteeu/PCPSolver)
 - [PCP News](https://webdocs.cs.ualberta.ca/~games/PCP/)
+- [Paper: Tackling Post’s Correspondence Problem](https://webdocs.cs.ualberta.ca/~games/PCP/paper/CG2002.pdf)
 
 Project52
 ---------------

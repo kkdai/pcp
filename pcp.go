@@ -13,6 +13,8 @@ type Domino struct {
 	DataB string
 }
 
+// Diff: Difference of two compare string
+// It will store if A B is equal or the difference string for cyclic checking.
 type Diff struct {
 	DiffCompare int // -1(B is longer), 0(eqal) or 1 (A is longer)
 	DiffDomino  string
@@ -24,59 +26,10 @@ type Result struct {
 	CurrentDiff     Diff
 }
 
-type Instance struct {
-	SavedResult  []Result
-	SavedDominos []Domino
-}
-
-//index:0  String A ,  index:1 String B.
-func (c *Instance) GetString(index int) string {
-	retString := ""
-
-	for _, result := range c.SavedResult {
-		if index == 0 { //DataA
-			retString = retString + c.SavedDominos[result.PotentialResult].DataA
-		} else { //DataB
-			retString = retString + c.SavedDominos[result.PotentialResult].DataB
-		}
-	}
-	return retString
-}
-
-func (c *Instance) isResultReach() bool {
-	if len(c.GetString(0)) == 0 && len(c.GetString(1)) == 0 {
-		return false
-	}
-	return c.GetString(0) == c.GetString(1)
-}
-
-func (c *Instance) isCyclicResult() bool {
-	if len(c.SavedResult) == 0 {
-		return false
-	}
-
-	checkingRet := c.SavedResult[len(c.SavedResult)-1]
-	for i := 0; i < len(c.SavedResult)-1; i++ {
-		ret := c.SavedResult[i]
-		//Find save result list has the same
-		if ret.PotentialResult == checkingRet.PotentialResult && ret.CurrentDiff == checkingRet.CurrentDiff {
-			return true
-		}
-	}
-	return false
-}
-
 // PCP (Post’s Correspondence Problems) contains all input dominos
 type PCP struct {
 	//Public:
 	Dominos []Domino
-}
-
-func contrainPrefix(str1, str2 string) bool {
-	if sub, find := getSubsetPrefix(str1, str2); find {
-		return sub == str2
-	}
-	return false
 }
 
 func getSubsetPrefix(str1, str2 string) (string, bool) {
@@ -99,15 +52,18 @@ func getSubsetPrefix(str1, str2 string) (string, bool) {
 	return str1, findSubset
 }
 
+// To validate the input domino, if it is valid for apply.
 func (p *PCP) IsDominoValid(curState Instance, inputDomino Domino) bool {
 	strA := curState.GetString(0)
 	strB := curState.GetString(1)
 
 	tempA := strA + inputDomino.DataA
 	tempB := strB + inputDomino.DataB
-	//fmt.Print("TempA=", tempA, " TempB:", tempB)
+	fmt.Println("TempA=", tempA)
+	fmt.Println("TempB=", tempB)
 
 	prefix, exist := getSubsetPrefix(tempA, tempB)
+	fmt.Println("Pre:= ", prefix)
 	if !exist {
 		return false
 	}
@@ -116,6 +72,7 @@ func (p *PCP) IsDominoValid(curState Instance, inputDomino Domino) bool {
 	return tempA == prefix || tempB == prefix
 }
 
+// Apply a domino in current status and check the difference.
 func (p *PCP) CheckDiff(curState Instance, dom Domino) (Diff, error) {
 	strA := curState.GetString(0) + dom.DataA
 	strB := curState.GetString(1) + dom.DataB
@@ -142,10 +99,10 @@ func (p *PCP) CheckDiff(curState Instance, dom Domino) (Diff, error) {
 
 func (p *PCP) ApplyDomino(curState Instance, dominoIndex int) (Instance, error) {
 	newDom := p.Dominos[dominoIndex]
-	fmt.Println("Got dom:", newDom)
 
 	if p.IsDominoValid(curState, newDom) {
-		fmt.Println("Dom is valid")
+		//fmt.Println("Dom is valid")
+		fmt.Printf("Cur (%v) Add (%d)->\n", curState.GetCurrentResult(), dominoIndex)
 		newRet := Result{}
 		newRet.PotentialResult = dominoIndex
 		if newDiff, err := p.CheckDiff(curState, newDom); err == nil {
@@ -170,6 +127,7 @@ func (p *PCP) AddDomino(strA, strB string) int {
 
 func (p *PCP) recursiveSolve(cur Instance) (Instance, error) {
 	if cur.isCyclicResult() {
+		fmt.Println("Cyclic result")
 		return Instance{}, errors.New(" Cyclic Result .....")
 	}
 
@@ -179,18 +137,22 @@ func (p *PCP) recursiveSolve(cur Instance) (Instance, error) {
 	}
 
 	for index, dom := range p.Dominos {
-		fmt.Println("dom=", dom)
+		fmt.Println("dom=", dom, " index=", index)
 		if p.IsDominoValid(cur, dom) {
 			fmt.Println("Find dom valid=", dom)
-
+			fmt.Printf("[%d]", index)
 			cur, _ = p.ApplyDomino(cur, index)
 			var err error
 			fmt.Println("StrA=", cur.GetString(0))
 			fmt.Println("StrB=", cur.GetString(1))
+			// if len(cur.GetString(0)) > 10 {
+			// 	return cur, errors.New("Too long")
+			// }
 			cur, err = p.recursiveSolve(cur)
 			if err == nil {
 				return cur, nil
 			}
+
 		}
 	}
 	return cur, errors.New("Don't have result")
@@ -199,21 +161,16 @@ func (p *PCP) recursiveSolve(cur Instance) (Instance, error) {
 // Try to find solution and return index slice if exist result
 // If don't have result error will not be nil
 func (p *PCP) FindSolution() ([]int, error) {
-	//Use first one as initialize (MPCP)
-
 	process := Instance{}
 	process.SavedDominos = p.Dominos
-	fmt.Println("ST:StrA=", process.GetString(0))
-	fmt.Println("ST:StrB=", process.GetString(1))
-	fmt.Println("current dominos=", process.SavedDominos)
+	//fmt.Println("ST:StrA=", process.GetString(0))
+	//fmt.Println("ST:StrB=", process.GetString(1))
+	//fmt.Println("current dominos=", process.SavedDominos)
 	if retInst, err := p.recursiveSolve(process); err != nil {
 		fmt.Println("err:", err)
 		return nil, err
 	} else {
-		var retInt []int
-		for i := 0; i < len(retInst.SavedResult); i++ {
-			//aretInt = append(retInt, retInt.SavedResult[i].PotentialResult)
-		}
-		return retInt, nil
+		pcpRet := retInst.GetCurrentResult()
+		return pcpRet, nil
 	}
 }
