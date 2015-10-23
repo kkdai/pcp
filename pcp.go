@@ -97,6 +97,7 @@ func (p *PCP) CheckDiff(curState Instance, dom Domino) (Diff, error) {
 	return retDiff, nil
 }
 
+// Apply a Domino for our potenial result.
 func (p *PCP) ApplyDomino(curState Instance, dominoIndex int) (Instance, error) {
 	newDom := p.Dominos[dominoIndex]
 
