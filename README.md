@@ -58,6 +58,7 @@ Inspired By
 - [Github:PCPSolver](https://github.com/dcatteeu/PCPSolver)
 - [PCP News](https://webdocs.cs.ualberta.ca/~games/PCP/)
 - [Paper: Tackling Post’s Correspondence Problem](https://webdocs.cs.ualberta.ca/~games/PCP/paper/CG2002.pdf)
+- [Thesis: Solving and Creating Difficult Instances of Post’s Correspondence Problem](https://webdocs.cs.ualberta.ca/~games/PCP/thesis/pcp.pdf)
 
 Project52
 ---------------
